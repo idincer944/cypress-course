@@ -27,3 +27,33 @@
 Cypress.Commands.add("getDataTest", (dataTestSelector) => {
   return cy.get(`[data-test="${dataTestSelector}"]`);
 });
+
+Cypress.Commands.add("addGrudge", (newGrudge) => {
+  return (cy.getDataTest("grudge-input").within(() => {
+    cy.get("input").type(newGrudge);
+  }), cy.getDataTest("grudge-button").click())
+});
+
+Cypress.Commands.add("checkGrudgeList", (n, grudge) => {
+  if (n == 0) {
+    return cy.getDataTest("grudge-list").within(() => {
+      cy.get("li").should("have.length", n);
+    });
+  }
+    return cy.getDataTest("grudge-list").within(() => {
+      cy.get("li").should("have.length", n);
+      cy.get("li").its(n - 1).should("contains.text", grudge);
+    });
+});
+
+Cypress.Commands.add('deleteGrudge', () => {
+  return cy.getDataTest("grudge-list").within(() => {
+    cy.get("li").its(0).within(() => {
+      cy.get('button').click();
+    });
+  });
+});
+
+Cypress.Commands.add('clearGrudges', () => {
+  return cy.getDataTest('clear-button').click();
+})
